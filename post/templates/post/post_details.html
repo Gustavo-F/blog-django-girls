@@ -1,1 +1,57 @@
-<h1>POST DETAILS</h1>
+{% extends 'base.html' %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+
+<!-- page-title -->
+<section class="section bg-secondary">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h4>{{ post.title }}</h4>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /page-title -->
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-11">
+            <ul class="list-inline d-flex justify-content-between py-3">
+                <li class="list-inline-item"><i class="ti-user mr-2"></i>Post by {{ post.author }}</li>
+                <li class="list-inline-item"><i class="ti-calendar mr-2"></i>{{ post.published_date | naturalday }}</li>
+            </ul>
+            
+            {% if post.thumbnail %}
+                <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="w-100 img-fluid mb-4">
+            {% endif %}
+            
+            <div class="content">
+                {{ post.text | safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container d-block mt-5">
+        <h5 class="text-end">Did you like this post?</h5>
+
+        <div class="row">
+            <div class="col-1">
+                <a class="btn">
+                    <i class="ti-thumb-up"  style="">Like</i>
+                </a>
+            </div>
+            <div class="col-1">
+                <a class="btn">
+                    <i class="ti-thumb-down">Dislike</i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
