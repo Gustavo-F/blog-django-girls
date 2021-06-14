@@ -4,16 +4,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% include 'partial/_head.html' %}
     <title>Blog</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
-    <div class="container">
+    <div>
         <!-- Nav -->
         <section>
             {% include 'partial/_nav.html' %}
@@ -21,15 +17,15 @@
     
         <!-- Content -->
         <section>
-            <div>
-                <h1>Olá Mundo</h1>
-            </div>
+            <main class=" container mt-4 mb-4">
+                {% block content %}{% endblock content %}
+            </main>
         </section>
 
         <!-- Footer -->
         <section>
             <footer>
-
+                {% include 'partial/_footer.html' %}
             </footer>
         </section>
     </div>
