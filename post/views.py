@@ -1,10 +1,19 @@
+from typing import List
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from . import models
+from django.views.generic.detail import DetailView
+from django.views.generic import ListView
 
 
-@login_required
-def index(request):
-    return render(request, 'post/index.html')
+class Index(ListView):
+    model = models.Post
+    template_name = 'post/index.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return models.Post.objects.filter(is_published=True).order_by('published_date')
 
 
 def login(request):
@@ -15,5 +24,8 @@ def register(request):
     return render(request, 'post/register.html')
 
 
-def post_details(request):
-    return render(request, 'post/post_details.html')
+class PostDetils(DetailView):
+    model = models.Post
+    template_name = 'post/post_details.html'
+    context_object_name = 'post'
+    slug_url_kwarg = 'slug'

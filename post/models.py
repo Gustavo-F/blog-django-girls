@@ -1,3 +1,5 @@
+from django.utils import timezone, dateformat
+from datetime import time
 from django.utils.text import slugify
 from django.db import models
 from django.db.models.deletion import CASCADE, DO_NOTHING
@@ -28,6 +30,10 @@ class Post(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = f'{slugify(self.title)}'
+
+        if not self.published_date:
+            if self.is_published:
+                self.published_date = timezone.now()
 
         super().save(*args, **kwargs)
 
