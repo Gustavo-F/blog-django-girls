@@ -11,4 +11,5 @@ urlpatterns = [
     path('logout/', view=views.logout, name='logout'),
     path('register/', view=views.Register.as_view(), name='register'),
     path('post_details/<slug>', view=views.PostDetils.as_view(), name='post_details'),
+    path('write_post/', view=views.WritePost.as_view(), name='write_post'),
 ]

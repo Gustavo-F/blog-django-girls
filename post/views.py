@@ -1,3 +1,4 @@
+from django.http import request
 from . import forms
 from django.shortcuts import redirect, render
 from . import models
@@ -6,6 +7,7 @@ from django.views import View
 from django.views.generic import ListView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class Index(ListView):
@@ -96,3 +98,42 @@ class PostDetils(DetailView):
 
 def approve_post(request):
     pass
+
+
+class WritePost(LoginRequiredMixin, View):
+    template_name = 'post/write_post.html'
+
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        context = {
+            'write_post_form': forms.WritePostForm(self.request.POST or None, self.request.FILES or None)
+        }
+
+        self.write_post_form = context['write_post_form']
+
+        self.render_template = render(
+            self.request, self.template_name, context)
+
+    def get(self, *args, **kwargs):
+        if not self.request.user.is_staff:
+            return redirect('post:index')
+
+        return self.render_template
+
+    def post(self, *args, **kwargs):
+        if not self.write_post_form.is_valid():
+            return redirect('post:write_post')
+
+        post = models.Post(
+            title=self.write_post_form.cleaned_data.get('title'),
+            text=self.write_post_form.cleaned_data.get('text'),
+            category=self.write_post_form.cleaned_data.get('category'),
+            author=self.request.user,
+            thumbnail=self.write_post_form.cleaned_data.get('thumbnail'),
+            is_published=self.write_post_form.cleaned_data.get('publish_now'),
+        )
+
+        post.save()
+
+        return redirect('post:write_post')

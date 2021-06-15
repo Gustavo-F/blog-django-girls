@@ -1,5 +1,7 @@
+from django.utils.safestring import mark_safe
 from django import forms
 from django.contrib.auth.models import User
+from . import models
 
 
 class SignUpForm(forms.ModelForm):
@@ -29,3 +31,34 @@ class SignUpForm(forms.ModelForm):
         cleaned_data = self.cleaned_data
 
         error_msgs = []
+
+
+class WritePostForm(forms.ModelForm):
+    title = forms.CharField(
+        required=True,
+        min_length=15,
+        max_length=255,
+    )
+
+    thumbnail = forms.ImageField(
+        required=False,
+    )
+
+    category = forms.ModelChoiceField(
+        required=True,
+        queryset=models.Category.objects.all().order_by('name')
+    )
+
+    text = forms.CharField(
+        required=True,
+        widget=forms.Textarea(attrs={
+            'rows': 15,
+            'cols': 20,
+        }),
+    )
+
+    publish_now = forms.BooleanField()
+
+    class Meta:
+        model = models.Post
+        fields = ['category', 'thumbnail', 'title', 'text', 'publish_now']

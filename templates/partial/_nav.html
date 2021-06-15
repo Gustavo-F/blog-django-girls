@@ -30,6 +30,12 @@
                 </div>
             </li>
 
+            {% if request.user.is_staff %}
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase text-dark" href="{% url 'post:write_post' %}">Write Post</a>
+                </li>
+            {% endif %}
+
             {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link text-uppercase text-dark" href="{% url 'post:logout' %}">Logout</a>
