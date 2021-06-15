@@ -28,8 +28,10 @@ class Post(models.Model):
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
+        super().save()
+
         if not self.slug:
-            self.slug = f'{slugify(self.title)}'
+            self.slug = f'{slugify(self.title)}-' + str(self.id)
 
         if not self.published_date:
             if self.is_published:
