@@ -96,12 +96,29 @@ class PostDetails(View):
 
         self.post_object = get_object_or_404(
             models.Post, slug=self.kwargs.get('slug'))
+
         comments = models.Comment.objects.filter(post=self.post_object)
+        user_approval = models.Aproval.objects.filter(
+            user=self.request.user, post=self.post_object).first()
+
+        positive_approvals = None
+        negative_approvals = None
+
+        approvals = models.Aproval.objects.filter(post=self.post_object)
+
+        if approvals:
+            positive_approvals = (
+                len(approvals.filter(is_approved=True)) / len(approvals)) * 100
+            negative_approvals = (
+                len(approvals.filter(is_approved=False)) / len(approvals)) * 100
 
         context = {
             'post': self.post_object,
             'comment_form': forms.CommentForm(self.request.POST or None),
             'comments': comments,
+            'user_approval': user_approval,
+            'positive_approvals': positive_approvals,
+            'negative_approvals': negative_approvals,
         }
 
         self.comment_form = context['comment_form']
@@ -167,27 +184,39 @@ class WritePost(LoginRequiredMixin, View):
 
 
 @login_required
-def like_post(request, pk, value):
+def like_post(request, pk, like_bool):
     post = get_object_or_404(models.Post, pk=pk)
     post_approval = models.Aproval.objects.filter(
         post=post, user=request.user).first()
 
     if not post_approval:
+        print('\ncriando\n')
         approval = models.Aproval(
-            post=post, user=request.user, is_approved=value)
+            post=post, user=request.user, is_approved=like_bool)
         approval.save()
     else:
-        print('\nsdfgasgefgasdgartdsfg\n')
-        if post_approval.is_approved and value:
-            post_approval.delete()
-        elif not post_approval.is_approved and not value:
-            post_approval.delete()
-        else:
-            if post_approval.is_approved:
-                post_approval.is_approved = False
-            else:
-                post_approval.is_approved = True
+        print(f'VALOR DO OBJETO: {post_approval.is_approved}')
 
-            post_approval.save()
+        if post_approval.is_approved:
+            print('approved')
+
+            if not like_bool:
+                print(f'VALOR PASSADO POR PARAMETRO: {like_bool}')
+                print('1 updating...')
+                post_approval.is_approved = False
+                post_approval.save()
+            else:
+                print('1 deleting...')
+                post_approval.delete()
+        else:
+            print('not approved')
+
+            if not like_bool:
+                post_approval.delete()
+                print('2 deleting...')
+            else:
+                print('2 updating...')
+                post_approval.is_approved = True
+                post_approval.save()
 
     return redirect('post:post_details', slug=post.slug)
