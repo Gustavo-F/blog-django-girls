@@ -1,6 +1,5 @@
-from django.http import HttpResponseRedirect
 from . import forms
-from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
 from . import models
 from django.views import View
@@ -89,7 +88,7 @@ class Register(View):
         return redirect('post:index')
 
 
-class PostDetils(View):
+class PostDetails(View):
     template_name = 'post/post_details.html'
 
     def setup(self, *args, **kwargs):
@@ -126,10 +125,6 @@ class PostDetils(View):
         comment.save()
 
         return self.render_template
-
-
-def approve_post(request):
-    pass
 
 
 class WritePost(LoginRequiredMixin, View):
@@ -169,3 +164,30 @@ class WritePost(LoginRequiredMixin, View):
         post.save()
 
         return redirect('post:write_post')
+
+
+@login_required
+def like_post(request, pk, value):
+    post = get_object_or_404(models.Post, pk=pk)
+    post_approval = models.Aproval.objects.filter(
+        post=post, user=request.user).first()
+
+    if not post_approval:
+        approval = models.Aproval(
+            post=post, user=request.user, is_approved=value)
+        approval.save()
+    else:
+        print('\nsdfgasgefgasdgartdsfg\n')
+        if post_approval.is_approved and value:
+            post_approval.delete()
+        elif not post_approval.is_approved and not value:
+            post_approval.delete()
+        else:
+            if post_approval.is_approved:
+                post_approval.is_approved = False
+            else:
+                post_approval.is_approved = True
+
+            post_approval.save()
+
+    return redirect('post:post_details', slug=post.slug)
