@@ -1,8 +1,8 @@
-from django.http import request
+from django.http import HttpResponseRedirect
 from . import forms
-from django.shortcuts import redirect, render
+from django.urls import reverse
+from django.shortcuts import redirect, render, get_object_or_404
 from . import models
-from django.views.generic.detail import DetailView
 from django.views import View
 from django.views.generic import ListView
 from django.contrib.auth import authenticate, login, logout
@@ -89,11 +89,43 @@ class Register(View):
         return redirect('post:index')
 
 
-class PostDetils(DetailView):
-    model = models.Post
+class PostDetils(View):
     template_name = 'post/post_details.html'
-    context_object_name = 'post'
-    slug_url_kwarg = 'slug'
+
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        self.post_object = get_object_or_404(
+            models.Post, slug=self.kwargs.get('slug'))
+        comments = models.Comment.objects.filter(post=self.post_object)
+
+        context = {
+            'post': self.post_object,
+            'comment_form': forms.CommentForm(self.request.POST or None),
+            'comments': comments,
+        }
+
+        self.comment_form = context['comment_form']
+
+        self.render_template = render(
+            self.request, self.template_name, context)
+
+    def get(self, *args, **kwargs):
+        return self.render_template
+
+    def post(self, *args, **kwargs):
+        if not self.comment_form.is_valid():
+            return self.render_template
+
+        comment = models.Comment(
+            comment=self.comment_form.cleaned_data.get('comment'),
+            author=self.request.user,
+            post=self.post_object,
+        )
+
+        comment.save()
+
+        return self.render_template
 
 
 def approve_post(request):

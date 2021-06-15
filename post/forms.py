@@ -1,3 +1,5 @@
+from django.db.models import fields
+from django.forms.widgets import Textarea
 from django.utils.safestring import mark_safe
 from django import forms
 from django.contrib.auth.models import User
@@ -62,3 +64,14 @@ class WritePostForm(forms.ModelForm):
     class Meta:
         model = models.Post
         fields = ['category', 'thumbnail', 'title', 'text', 'publish_now']
+
+
+class CommentForm(forms.ModelForm):
+    comment = forms.CharField(
+        max_length=255,
+        widget=Textarea(),
+    )
+
+    class Meta:
+        model = models.Comment
+        fields = ['comment', ]

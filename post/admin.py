@@ -20,8 +20,9 @@ admin.site.register(models.Post, PostAdmin)
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'author', 'post', 'comment_date', 'is_approved')
-    list_display_links = ('id', 'author', 'post', 'comment_date')
+    list_display = ('id', 'comment', 'author', 'post',
+                    'comment_date', 'is_approved')
+    list_display_links = ('id', 'comment', 'author', 'post', 'comment_date')
     list_editable = ('is_approved', )
 
 
