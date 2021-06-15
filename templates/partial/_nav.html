@@ -29,12 +29,19 @@
                     <a class="dropdown-item" href="homepage-2.html">Life Style</a>
                 </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link text-uppercase text-dark" href="about.html">About</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-uppercase text-dark" href="contact.html">Contact</a>
-            </li>
+
+            {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase text-dark" href="{% url 'post:logout' %}">Logout</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase text-dark" href="{% url 'post:login' %}">Sign-In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase text-dark" href="{% url 'post:register' %}">Sign-Up</a>
+                </li>
+            {% endif %}
         </ul>
         <form class="form-inline position-relative ml-lg-4">
             <input class="form-control px-0 w-100" type="search" placeholder="Search">
