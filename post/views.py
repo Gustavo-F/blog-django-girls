@@ -98,11 +98,14 @@ class PostDetails(View):
             models.Post, slug=self.kwargs.get('slug'))
 
         comments = models.Comment.objects.filter(post=self.post_object)
-        user_approval = models.Aproval.objects.filter(
-            user=self.request.user, post=self.post_object).first()
 
+        user_approval = None
         positive_approvals = None
         negative_approvals = None
+
+        if self.request.user.is_authenticated:
+            user_approval = models.Aproval.objects.filter(
+                user=self.request.user, post=self.post_object).first()
 
         approvals = models.Aproval.objects.filter(post=self.post_object)
 
