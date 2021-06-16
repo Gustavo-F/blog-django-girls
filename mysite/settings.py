@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-asm8m2d3bw-4z=7ck1ce6hi8vi45@@nx$!sr(k6#2*4*rj583n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com']
 
 
 # Application definition
@@ -137,3 +137,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_URL = 'blog:login'
+
+try:
+    from . import local_settings
+except:
+    pass
