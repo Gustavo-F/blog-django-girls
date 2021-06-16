@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class Index(ListView):
     model = models.Post
-    template_name = 'post/index.html'
+    template_name = 'blog/index.html'
     context_object_name = 'posts'
     paginate_by = 10
 
@@ -20,7 +20,7 @@ class Index(ListView):
 
 
 class Login(View):
-    template_name = 'post/login.html'
+    template_name = 'blog/login.html'
 
     def get(self, *args, **kwargs):
         return render(self.request, self.template_name)
@@ -30,28 +30,28 @@ class Login(View):
         password = self.request.POST.get('password')
 
         if not username or not password:
-            return redirect('post:login')
+            return redirect('blog:login')
 
         user = authenticate(self.request, username=username, password=password)
 
         if not user:
-            return redirect('post:login')
+            return redirect('blog:login')
 
         print('\nFazendo login\n')
         login(self.request, user)
 
-        return redirect('post:index')
+        return redirect('blog:index')
 
 
 class Logout(View):
     def get(self, *args, **kwargs):
         logout(self.request)
 
-        return redirect('post:index')
+        return redirect('blog:index')
 
 
 class Register(View):
-    template_name = 'post/register.html'
+    template_name = 'blog/register.html'
 
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
@@ -68,7 +68,7 @@ class Register(View):
     def get(self, *args, **kwargs):
         print('\nteste \n')
         if self.request.user.is_authenticated:
-            return redirect('post:index')
+            return redirect('blog:index')
 
         return self.render_template
 
@@ -85,11 +85,11 @@ class Register(View):
         user.save()
         login(self.request, user)
 
-        return redirect('post:index')
+        return redirect('blog:index')
 
 
 class PostDetails(View):
-    template_name = 'post/post_details.html'
+    template_name = 'blog/post_details.html'
 
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
@@ -148,7 +148,7 @@ class PostDetails(View):
 
 
 class WritePost(LoginRequiredMixin, View):
-    template_name = 'post/write_post.html'
+    template_name = 'blog/write_post.html'
 
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
@@ -164,13 +164,13 @@ class WritePost(LoginRequiredMixin, View):
 
     def get(self, *args, **kwargs):
         if not self.request.user.is_staff:
-            return redirect('post:index')
+            return redirect('blog:index')
 
         return self.render_template
 
     def post(self, *args, **kwargs):
         if not self.write_post_form.is_valid():
-            return redirect('post:write_post')
+            return redirect('blog:write_post')
 
         post = models.Post(
             title=self.write_post_form.cleaned_data.get('title'),
@@ -183,7 +183,7 @@ class WritePost(LoginRequiredMixin, View):
 
         post.save()
 
-        return redirect('post:write_post')
+        return redirect('blog:write_post')
 
 
 @login_required
@@ -222,4 +222,4 @@ def like_post(request, pk, like_bool):
                 post_approval.is_approved = True
                 post_approval.save()
 
-    return redirect('post:post_details', slug=post.slug)
+    return redirect('blog:post_details', slug=post.slug)

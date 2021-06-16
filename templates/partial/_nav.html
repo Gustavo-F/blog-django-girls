@@ -1,7 +1,7 @@
 {% load static %}
 
 <nav class="navbar navbar-expand-lg navbar-light">
-    <a class="navbar-brand" href="{% url 'post:index' %}">
+    <a class="navbar-brand" href="{% url 'blog:index' %}">
         <img src="https://img.icons8.com/windows/32/000000/django.png" />
         Blog Django
     </a>
@@ -13,7 +13,7 @@
     <div class="collapse navbar-collapse text-center" id="navogation">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link text-uppercase text-dark" href="{% url 'post:index' %}">
+                <a class="nav-link text-uppercase text-dark" href="{% url 'blog:index' %}">
                     <i class="ti-home"></i>
                     Home
                 </a>
@@ -32,20 +32,20 @@
 
             {% if request.user.is_staff %}
                 <li class="nav-item">
-                    <a class="nav-link text-uppercase text-dark" href="{% url 'post:write_post' %}">Write Post</a>
+                    <a class="nav-link text-uppercase text-dark" href="{% url 'blog:write_post' %}">Write Post</a>
                 </li>
             {% endif %}
 
             {% if request.user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link text-uppercase text-dark" href="{% url 'post:logout' %}">Logout</a>
+                    <a class="nav-link text-uppercase text-dark" href="{% url 'blog:logout' %}">Logout</a>
                 </li>
             {% else %}
                 <li class="nav-item">
-                    <a class="nav-link text-uppercase text-dark" href="{% url 'post:login' %}">Sign-In</a>
+                    <a class="nav-link text-uppercase text-dark" href="{% url 'blog:login' %}">Sign-In</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-uppercase text-dark" href="{% url 'post:register' %}">Sign-Up</a>
+                    <a class="nav-link text-uppercase text-dark" href="{% url 'blog:register' %}">Sign-Up</a>
                 </li>
             {% endif %}
         </ul>

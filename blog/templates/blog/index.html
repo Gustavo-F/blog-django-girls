@@ -16,12 +16,12 @@
 
                 <p class="text-uppercase mb-2">{{ post.category }} | {{ post.published_date | naturalday }}</p>
                 <h4 class="title-border">
-                    <a class="text-dark" href="{% url 'post:post_details' post.slug %}">{{ post.title }}</a>
+                    <a class="text-dark" href="{% url 'blog:post_details' post.slug %}">{{ post.title }}</a>
                 </h4>
                 <p>
                     {{ post.text | slice:"0:255" }} ...
                 </p>
-                <a href="{% url 'post:post_details' post.slug %}" class="btn btn-transparent">read more</a>
+                <a href="{% url 'blog:post_details' post.slug %}" class="btn btn-transparent">read more</a>
             </article>
         </div>
         {% endfor %}
