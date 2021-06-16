@@ -139,6 +139,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_URL = 'blog:login'
 
 try:
-    from . import local_settings
+    from .local_settings import *
 except:
     pass
