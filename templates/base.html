@@ -20,6 +20,10 @@
         <!-- Content -->
         <section>
             <main>
+                <div class="container">
+                    {% include 'partial/_messages.html' %}
+                </div>
+
                 {% block content %}{% endblock content %}
             </main>
         </section>

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+from django.contrib.messages import constants
 import os
 from pathlib import Path
 
@@ -137,6 +138,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 LOGIN_URL = 'blog:login'
+
+MESSAGE_TAGS = {
+    constants.DEBUG: 'alert-info',
+    constants.ERROR: 'alert-danger',
+    constants.INFO: 'alert-info',
+    constants.SUCCESS: 'alert-success',
+    constants.WARNING: 'alert-warning',
+}
 
 try:
     from .local_settings import *
