@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <form action="" method="post">
+            {% csrf_token %}
+
+            <div class="input-group mb-3 ui-widget">
+                <input id="add_category" name="add_category_input" type="text" class="form-control" placeholder="Add Categoty">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit" id="add_categoty_button">
+                        <i class="ti-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-fluid mt-5">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <td>{{ category.name }}</td>
+                        <td>
+                            <a class="btn-btn-primary" type="button" href="{% url 'blog:remove_category' category.pk %}">
+                                <i class="ti-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock content %}
+

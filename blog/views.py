@@ -1,3 +1,5 @@
+from django.contrib import messages
+from django.http.response import HttpResponse
 from . import forms
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render, get_object_or_404
@@ -223,3 +225,48 @@ def like_post(request, pk, like_bool):
                 post_approval.save()
 
     return redirect('blog:post_details', slug=post.slug)
+
+
+class Categories(LoginRequiredMixin, View):
+    template_name = 'blog/categories.html'
+
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        context = {
+            'categories': models.Category.objects.all().order_by('name')
+        }
+
+        self.render_template = render(
+            self.request, self.template_name, context)
+
+    def get(self, *args, **kwargs):
+        if not self.request.user.is_staff:
+            return redirect('blog:index')
+
+        return self.render_template
+
+    def post(self, *args, **kwargs):
+        if models.Category.objects.filter(name=self.request.POST.get('add_category_input')):
+            return redirect('blog:categories')
+
+        category = models.Category(
+            name=self.request.POST.get('add_category_input'))
+
+        category.save()
+
+        return redirect('blog:categories')
+
+
+def remove_gategory(request, pk):
+    category = models.Category.objects.get(pk=pk)
+
+    try:
+        category.delete()
+    except:
+        messages.error(
+            request,
+            f'Not is possible remove the category "{category.name}", as there are posts registered using it.',
+        )
+
+    return redirect('blog:categories')

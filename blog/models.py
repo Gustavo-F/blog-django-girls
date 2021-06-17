@@ -1,5 +1,3 @@
-from django.utils import timezone, dateformat
-from datetime import time
 from django.utils.text import slugify
 from django.db import models
 from django.db.models.deletion import CASCADE, DO_NOTHING
