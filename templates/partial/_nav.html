@@ -31,11 +31,16 @@
             </li>
 
             {% if request.user.is_staff %}
-                <li class="nav-item">
-                    <a class="nav-link text-uppercase text-dark" href="{% url 'blog:write_post' %}">Write Post</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-uppercase text-dark" href="{% url 'blog:categories' %}">Categories</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-uppercase text-dark dropdown-toggle" href="" id="adminDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin
+                    </a>
+                    <div class="dropdown-menu" style="max-height: 300px; overflow-y: auto;"
+                        aria-labelledby="adminDropdown">
+                        <a class="dropdown-item" href="{% url 'blog:write_post' %}">Write Post</a>
+                        <a class="dropdown-item" href="{% url 'blog:categories' %}">Manage Categories</a>
+                    </div>
                 </li>
             {% endif %}
 
