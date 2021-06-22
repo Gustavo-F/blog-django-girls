@@ -166,7 +166,7 @@ class PostDetails(View):
 
         comment.save()
 
-        return self.render_template
+        return redirect('blog:post_details', slug=self.post_object.slug)
 
 
 class WritePost(LoginRequiredMixin, View):
