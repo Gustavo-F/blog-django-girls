@@ -25,8 +25,10 @@
                 </a>
                 <div class="dropdown-menu" style="max-height: 300px; overflow-y: auto;"
                     aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="index.html">Tech</a>
-                    <a class="dropdown-item" href="homepage-2.html">Life Style</a>
+                    
+                    {% for category in categories %}
+                        <a class="dropdown-item" href="{% url 'blog:list_per_category' category.name %}">{{ category }}</a>
+                    {% endfor %}
                 </div>
             </li>
 

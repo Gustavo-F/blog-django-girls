@@ -21,6 +21,26 @@ class Index(ListView):
         return models.Post.objects.filter(is_published=True).order_by('published_date')
 
 
+class ListPerCategory(ListView):
+    template_name = 'blog/index.html'
+
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        category = get_object_or_404(
+            models.Category, name=self.kwargs.get('string'))
+
+        posts = models.Post.objects.filter(
+            category=category).order_by('published_date')
+
+        self.context = {
+            'posts': posts
+        }
+
+    def get(self, *args, **kwargs):
+        return render(self.request, self.template_name, self.context)
+
+
 class Login(View):
     template_name = 'blog/login.html'
 
@@ -232,7 +252,7 @@ def dislike_post(request, pk, like_bool):
     return redirect('blog:post_details', slug=post.slug)
 
 
-class Categories(LoginRequiredMixin, View):
+class ManageCategories(LoginRequiredMixin, View):
     template_name = 'blog/categories.html'
 
     def setup(self, *args, **kwargs):
@@ -275,3 +295,7 @@ def remove_gategory(request, pk):
         )
 
     return redirect('blog:categories')
+
+
+def get_categories(request):
+    return {'categories': models.Category.objects.all()}
