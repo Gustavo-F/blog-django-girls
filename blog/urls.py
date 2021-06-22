@@ -17,4 +17,6 @@ urlpatterns = [
          view=views.dislike_post, name='dislike_post'),
     path('categories/', view=views.ManageCategories.as_view(), name='categories'),
     path('remove_category/<pk>', view=views.remove_gategory, name='remove_category'),
+    path('remove_comment/<pk>', view=views.remove_comment,
+         name='remove_comment'),
 ]

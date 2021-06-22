@@ -46,7 +46,7 @@
             {% if user_approval.is_approved %}
                 <div class="row">
                     <div class="col-1">
-                        <a class="btn" style="background-color: orange;" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
+                        <a class="btn btn-secondary" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
                             <i class="ti-thumb-up">Like</i>
                         </a>
                     </div>
@@ -64,7 +64,7 @@
                         </a>
                     </div>
                     <div class="col-1">
-                        <a class="btn" style="background-color: orange;" type="button" href="{% url 'blog:dislike_post' pk=post.pk like_bool=False %}">
+                        <a class="btn  btn-secondary"type="button" href="{% url 'blog:dislike_post' pk=post.pk like_bool=False %}">
                             <i class="ti-thumb-down">Dislike</i>
                         </a>
                     </div>
@@ -117,6 +117,12 @@
             </span>
             <span class="align-items-center">
                 <i class="ti-calendar"> {{ comment.comment_date | naturalday }} </i>
+
+                {% if request.user.is_staff %}
+                    <a href="{% url 'blog:remove_comment' comment.pk %}" class="btn" style="color: red;">
+                        <i class="ti-trash"></i>
+                    </a>
+                {% endif %}
             </span>
         </div>
         <div class="card-body">

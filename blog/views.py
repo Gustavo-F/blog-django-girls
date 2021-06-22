@@ -299,3 +299,10 @@ def remove_gategory(request, pk):
 
 def get_categories(request):
     return {'categories': models.Category.objects.all()}
+
+
+def remove_comment(request, pk):
+    comment = models.Comment.objects.get(pk=pk)
+    comment.delete()
+
+    return redirect(request.META.get('HTTP_REFERER'))
