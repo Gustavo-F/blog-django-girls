@@ -195,34 +195,39 @@ def like_post(request, pk, like_bool):
         post=post, user=request.user).first()
 
     if not post_approval:
-        print('\ncriando\n')
-        approval = models.Aproval(
-            post=post, user=request.user, is_approved=like_bool)
-        approval.save()
+        models.Aproval(
+            is_approved=like_bool,
+            user=request.user,
+            post=post
+        ).save()
     else:
-        print(f'VALOR DO OBJETO: {post_approval.is_approved}')
-
-        if post_approval.is_approved:
-            print('approved')
-
-            if not like_bool:
-                print(f'VALOR PASSADO POR PARAMETRO: {like_bool}')
-                print('1 updating...')
-                post_approval.is_approved = False
-                post_approval.save()
-            else:
-                print('1 deleting...')
-                post_approval.delete()
+        if not post_approval.is_approved:
+            post_approval.is_approved = like_bool
+            post_approval.save()
         else:
-            print('not approved')
+            post_approval.delete()
 
-            if not like_bool:
-                post_approval.delete()
-                print('2 deleting...')
-            else:
-                print('2 updating...')
-                post_approval.is_approved = True
-                post_approval.save()
+    return redirect('blog:post_details', slug=post.slug)
+
+
+@login_required
+def dislike_post(request, pk, like_bool):
+    post = get_object_or_404(models.Post, pk=pk)
+    post_approval = models.Aproval.objects.filter(
+        post=post, user=request.user).first()
+
+    if not post_approval:
+        models.Aproval(
+            is_approved=like_bool,
+            user=request.user,
+            post=post
+        ).save()
+    else:
+        if not post_approval.is_approved:
+            post_approval.delete()
+        else:
+            post_approval.is_approved = like_bool
+            post_approval.save()
 
     return redirect('blog:post_details', slug=post.slug)
 
