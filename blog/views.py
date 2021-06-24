@@ -283,7 +283,8 @@ class ManageCategories(LoginRequiredMixin, View):
         return redirect('blog:categories')
 
 
-def remove_gategory(request, pk):
+@login_required
+def remove_category(request, pk):
     category = models.Category.objects.get(pk=pk)
 
     try:
@@ -301,6 +302,7 @@ def get_categories(request):
     return {'categories': models.Category.objects.all()}
 
 
+@login_required
 def remove_comment(request, pk):
     comment = models.Comment.objects.get(pk=pk)
     comment.delete()
