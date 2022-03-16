@@ -1,0 +1,16 @@
+SECRET_KEY = 'django-secret-key'
+
+DEBUG = True
+
+ALLOWED_HOSTS = ['127.0.0.1']
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db_name',
+        'HOST': 'host_address',
+        'PORT': 'host_port',
+        'USER': 'db_user',
+        'PASSWORD': 'db_password',
+    }
+}
