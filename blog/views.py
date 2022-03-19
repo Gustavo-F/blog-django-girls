@@ -1,14 +1,14 @@
 from django.contrib import messages
-from django.http.response import HttpResponse
-from . import forms
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render, get_object_or_404
-from . import models
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.generic import ListView
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin
+
+from . import forms, models
 
 
 class Index(ListView):
@@ -39,75 +39,6 @@ class ListPerCategory(ListView):
 
     def get(self, *args, **kwargs):
         return render(self.request, self.template_name, self.context)
-
-
-class Login(View):
-    template_name = 'blog/login.html'
-
-    def get(self, *args, **kwargs):
-        return render(self.request, self.template_name)
-
-    def post(self, *args, **kwargs):
-        username = self.request.POST.get('username')
-        password = self.request.POST.get('password')
-
-        if not username or not password:
-            return redirect('blog:login')
-
-        user = authenticate(self.request, username=username, password=password)
-
-        if not user:
-            return redirect('blog:login')
-
-        print('\nFazendo login\n')
-        login(self.request, user)
-
-        return redirect('blog:index')
-
-
-class Logout(View):
-    def get(self, *args, **kwargs):
-        logout(self.request)
-
-        return redirect('blog:index')
-
-
-class Register(View):
-    template_name = 'blog/register.html'
-
-    def setup(self, *args, **kwargs):
-        super().setup(*args, **kwargs)
-
-        context = {
-            'register_form': forms.SignUpForm(data=self.request.POST or None),
-        }
-
-        self.register_form = context['register_form']
-
-        self.render_template = render(
-            self.request, self.template_name, context)
-
-    def get(self, *args, **kwargs):
-        print('\nteste \n')
-        if self.request.user.is_authenticated:
-            return redirect('blog:index')
-
-        return self.render_template
-
-    def post(self, *args, **kwargs):
-        if not self.register_form.is_valid():
-            return self.render_template
-
-        user = User(
-            username=self.register_form.cleaned_data.get('username'),
-        )
-
-        user.set_password(self.register_form.cleaned_data.get('password'))
-
-        user.save()
-        login(self.request, user)
-
-        return redirect('blog:index')
 
 
 class PostDetails(View):

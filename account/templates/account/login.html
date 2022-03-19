@@ -13,17 +13,21 @@
         <div class="col-xl-4 col-lg-6 col-lg-8 m-0 p-1">
             <div class="card card-body shadow p-5">
                 <h3 class="text-center mb-3">Login</h3>
+                {% include 'partial/_messages.html' %}
                 <form action="" method="post" autocomplete="off">
                     {% csrf_token %}
 
                     <div class="form-group mb-3">
                         <label for="username">Username</label>
-                        <input class="form-control" id="username" type="text" placeholder="Username" name="username">
+                        <input 
+                            class="form-control" id="username" type="text" placeholder="Username" 
+                            name="username" required autofocus 
+                        />
                     </div>
                     <div class="form-group mb-3">
                         <label for="password">Password</label>
                         <input class="form-control" id="password" type="password" placeholder="Password"
-                            name="password">
+                            name="password" required />
                     </div>
                     <div class="row">
                         <div class="col-auto">

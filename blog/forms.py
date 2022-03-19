@@ -1,38 +1,8 @@
-from django.db.models import fields
+from django import forms
 from django.forms.widgets import Textarea
 from django.utils.safestring import mark_safe
-from django import forms
-from django.contrib.auth.models import User
+
 from . import models
-
-
-class SignUpForm(forms.ModelForm):
-    username = forms.CharField(
-        required=True,
-        max_length=30,
-    )
-
-    password = forms.CharField(
-        required=True,
-        max_length=30,
-        widget=forms.PasswordInput()
-    )
-
-    confirm_password = forms.CharField(
-        required=True,
-        max_length=30,
-        widget=forms.PasswordInput()
-    )
-
-    class Meta:
-        model = User
-        fields = ['username', 'password', 'confirm_password', ]
-
-    def clean(self):
-        super().clean()
-        cleaned_data = self.cleaned_data
-
-        error_msgs = []
 
 
 class WritePostForm(forms.ModelForm):
