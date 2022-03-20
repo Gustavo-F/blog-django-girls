@@ -189,7 +189,7 @@ class ManageCategories(LoginRequiredMixin, View):
 
     def get(self, *args, **kwargs):
         if not self.request.user.is_staff:
-            return Http404()
+            raise Http404()
 
         return self.render_template
 
@@ -221,6 +221,24 @@ def remove_category(request, pk):
 def get_categories(request):
     return {'categories': models.Category.objects.all()}
 
+
+@login_required(login_url='/accounts/login/')
+def edit_category(request, pk):
+    if not request.user.is_staff:
+        raise Http404()
+
+    categoryName = request.POST.get('name')
+    if not categoryName:
+        messages.error(request, 'Category name must not be empty.')
+    else: 
+        category = get_object_or_404(models.Category, pk=pk)
+
+        category.name = categoryName
+        category.save()
+
+        messages.success(request, 'Category edited successfully.')
+
+    return redirect('blog:categories')
 
 @login_required
 def remove_comment(request, pk):
