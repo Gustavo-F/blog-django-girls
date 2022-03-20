@@ -16,24 +16,20 @@ class Category(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
-    thumbnail = models.ImageField(
-        upload_to='posts_img/%Y/%m/%d', blank=True, null=True)
+    thumbnail = models.ImageField(upload_to='posts_img/%Y/%m/%d', blank=True, null=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
-    category = models.ForeignKey(Category, on_delete=DO_NOTHING)
+    categories = models.ManyToManyField(Category)
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
     is_published = models.BooleanField(default=False)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, null=True, blank=True, max_length=200)
 
     def save(self, *args, **kwargs):
         super().save()
+        self.slug = f'{slugify(self.title)}-' + str(self.id)
 
-        if not self.slug:
-            self.slug = f'{slugify(self.title)}-' + str(self.id)
-
-        if not self.published_date:
-            if self.is_published:
-                self.published_date = timezone.now()
+        if not self.published_date and self.is_published:
+            self.published_date = timezone.now()
 
         super().save(*args, **kwargs)
 

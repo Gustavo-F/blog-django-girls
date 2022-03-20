@@ -11,17 +11,18 @@ admin.site.register(models.Category, CategoryAdmin)
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'category', 'author', 'is_published')
-    list_display_links = ('id', 'title', 'category', 'author')
+    list_display = ('id', 'title', 'author', 'is_published')
+    list_display_links = ('id', 'title', 'author')
     list_editable = ('is_published', )
+
+    filter_horizontal = ('categories', )
 
 
 admin.site.register(models.Post, PostAdmin)
 
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'comment', 'author', 'post',
-                    'comment_date', 'is_approved')
+    list_display = ('id', 'comment', 'author', 'post', 'comment_date', 'is_approved')
     list_display_links = ('id', 'comment', 'author', 'post', 'comment_date')
     list_editable = ('is_approved', )
 

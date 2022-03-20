@@ -27,11 +27,8 @@ class ListPerCategory(ListView):
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
 
-        category = get_object_or_404(
-            models.Category, name=self.kwargs.get('string'))
-
-        posts = models.Post.objects.filter(
-            category=category).order_by('published_date')
+        category = get_object_or_404(models.Category, name=self.kwargs.get('string'))
+        posts = models.Post.objects.filter(categories=category).order_by('published_date')
 
         self.context = {
             'posts': posts
@@ -110,7 +107,7 @@ class WritePost(LoginRequiredMixin, View):
             'write_post_form': forms.WritePostForm(self.request.POST or None, self.request.FILES or None)
         }
 
-        self.write_post_form = context['write_post_form']
+        self.post_form = context['write_post_form']
 
         self.render_template = render(
             self.request, self.template_name, context)
@@ -122,20 +119,15 @@ class WritePost(LoginRequiredMixin, View):
         return self.render_template
 
     def post(self, *args, **kwargs):
-        if not self.write_post_form.is_valid():
+        if not self.post_form.is_valid():
             return redirect('blog:write_post')
 
-        post = models.Post(
-            title=self.write_post_form.cleaned_data.get('title'),
-            text=self.write_post_form.cleaned_data.get('text'),
-            category=self.write_post_form.cleaned_data.get('category'),
-            author=self.request.user,
-            thumbnail=self.write_post_form.cleaned_data.get('thumbnail'),
-            is_published=self.write_post_form.cleaned_data.get('publish_now'),
-        )
+        post = self.post_form.save(commit=False)
+        post.author = self.request.user
 
         post.save()
 
+        messages.success(self.request, 'Post created successfully.')
         return redirect('blog:write_post')
 
 

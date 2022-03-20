@@ -1,5 +1,5 @@
 django
-pymysql
-mysqlclient
 pillow
+mysqlclient
 django-crispy-forms
+django-multiselectfield

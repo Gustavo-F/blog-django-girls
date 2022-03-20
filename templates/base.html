@@ -2,60 +2,59 @@
 
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        {% include 'partial/_head.html' %}
+        <title>Blog</title>
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <div>
+            <!-- Nav -->
+            <section>
+                <header class="navigation">
+                    {% include 'partial/_nav.html' %}
+                </header>
+            </section>
+            <!-- Content -->
+            <section>
+                <main>
+                    <div class="container">
+                        {% include 'partial/_messages.html' %}
+                    </div>
 
-<head>
-    {% include 'partial/_head.html' %}
-    <title>Blog</title>
-</head>
+                    {% block content %}{% endblock content %}
+                </main>
+            </section>
+            <!-- Footer -->
+            <section>
+                <footer class="mt-auto">
+                    {% include 'partial/_footer.html' %}
+                </footer>
+            </section>
+        </div>
 
-<body class="d-flex flex-column min-vh-100">
-    <div>
-        <!-- Nav -->
-        <section>
-            <header class="navigation">
-                {% include 'partial/_nav.html' %}
-            </header>
-        </section>
-    
-        <!-- Content -->
-        <section>
-            <main>
-                <div class="container">
-                    {% include 'partial/_messages.html' %}
-                </div>
+        <!-- jQuery -->
+        <script src="{% static 'plugins/jQuery/jquery.min.js'%}"></script>
+        <!-- Bootstrap JS -->
+        <script src="{% static 'plugins/bootstrap/bootstrap.min.js' %}"></script>
+        <!-- slick slider -->
+        <script src="{% static 'plugins/slick/slick.min.js' %}"></script>
+        <!-- masonry -->
+        <script src="{% static 'plugins/masonry/masonry.js' %}"></script>
+        <!-- instafeed -->
+        <script src="{% static 'plugins/instafeed/instafeed.min.js' %}"></script>
+        <!-- smooth scroll -->
+        <script src="{% static 'plugins/smooth-scroll/smooth-scroll.js' %}"></script>
+        <!-- headroom -->
+        <script src="{% static 'plugins/headroom/headroom.js' %}"></script>
+        <!-- reading time -->
+        <script src="{% static 'plugins/reading-time/readingTime.min.js' %}"></script>
+        <!-- Main Script -->
+        <script src="{% static 'js/script.js' %}"></script>
+        <!-- SelectPicker -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
-                {% block content %}{% endblock content %}
-            </main>
-        </section>
-
-        <!-- Footer -->
-        <section>
-            <footer class="mt-auto">
-                {% include 'partial/_footer.html' %}
-            </footer>
-        </section>
-    </div>
-
-    <!-- jQuery -->
-    <script src="{% static 'plugins/jQuery/jquery.min.js'%}"></script>
-    <!-- Bootstrap JS -->
-    <script src="{% static 'plugins/bootstrap/bootstrap.min.js' %}"></script>
-    <!-- slick slider -->
-    <script src="{% static 'plugins/slick/slick.min.js' %}"></script>
-    <!-- masonry -->
-    <script src="{% static 'plugins/masonry/masonry.js' %}"></script>
-    <!-- instafeed -->
-    <script src="{% static 'plugins/instafeed/instafeed.min.js' %}"></script>
-    <!-- smooth scroll -->
-    <script src="{% static 'plugins/smooth-scroll/smooth-scroll.js' %}"></script>
-    <!-- headroom -->
-    <script src="{% static 'plugins/headroom/headroom.js' %}"></script>
-    <!-- reading time -->
-    <script src="{% static 'plugins/reading-time/readingTime.min.js' %}"></script>
-
-    <!-- Main Script -->
-    <script src="{% static 'js/script.js' %}"></script>
-
-</body>
-
+        <script>
+            $('.selectpicker').selectpicker();
+        </script>
+    </body>
 </html>

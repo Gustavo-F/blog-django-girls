@@ -1,6 +1,5 @@
 from django import forms
 from django.forms.widgets import Textarea
-from django.utils.safestring import mark_safe
 
 from . import models
 
@@ -16,9 +15,16 @@ class WritePostForm(forms.ModelForm):
         required=False,
     )
 
-    category = forms.ModelChoiceField(
+    categories = forms.ModelMultipleChoiceField(
         required=True,
-        queryset=models.Category.objects.all().order_by('name')
+        queryset=models.Category.objects.all().order_by('name'),
+        widget=forms.SelectMultiple(attrs={
+            'class': 'selectpicker',
+            'multiple': 'true',
+            'data-live-search': 'true',
+            'title': 'Search a category...',
+            'data-style': 'btn-primary'
+        }),
     )
 
     text = forms.CharField(
@@ -33,14 +39,15 @@ class WritePostForm(forms.ModelForm):
 
     class Meta:
         model = models.Post
-        fields = ['category', 'thumbnail', 'title', 'text', 'publish_now']
+        fields = ['categories', 'thumbnail', 'title', 'text', 'publish_now']
 
 
 class CommentForm(forms.ModelForm):
+    # TODO: verificar envio de comentaio em branco
     comment = forms.CharField(
         max_length=255,
         widget=Textarea(),
-    )
+    ) 
 
     class Meta:
         model = models.Comment

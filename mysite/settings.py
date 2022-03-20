@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'account',
 
     'crispy_forms',
+    'multiselectfield',
 ]
 
 MIDDLEWARE = [
