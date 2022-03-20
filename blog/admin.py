@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django_summernote.admin import SummernoteModelAdmin
+
 from . import models
 
 
@@ -10,12 +12,13 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(models.Category, CategoryAdmin)
 
 
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(SummernoteModelAdmin):
     list_display = ('id', 'title', 'author', 'is_published')
     list_display_links = ('id', 'title', 'author')
     list_editable = ('is_published', )
 
     filter_horizontal = ('categories', )
+    summernote_fields = ('text', )
 
 
 admin.site.register(models.Post, PostAdmin)

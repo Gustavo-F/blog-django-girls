@@ -1,9 +1,7 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
-from django.http.response import HttpResponse
+from django.http.response import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.generic import ListView
@@ -182,27 +180,26 @@ class ManageCategories(LoginRequiredMixin, View):
         super().setup(*args, **kwargs)
 
         context = {
+            'category_form': forms.CategoryForm(self.request.POST or None),
             'categories': models.Category.objects.all().order_by('name')
         }
 
-        self.render_template = render(
-            self.request, self.template_name, context)
+        self.category_form = context['category_form']
+        self.render_template = render(self.request, self.template_name, context)
 
     def get(self, *args, **kwargs):
         if not self.request.user.is_staff:
-            return redirect('blog:index')
+            return Http404()
 
         return self.render_template
 
     def post(self, *args, **kwargs):
-        if models.Category.objects.filter(name=self.request.POST.get('add_category_input')):
-            return redirect('blog:categories')
+        if not self.category_form.is_valid():
+            return self.render_template
 
-        category = models.Category(
-            name=self.request.POST.get('add_category_input'))
-
-        category.save()
-
+        self.category_form.save()
+        
+        messages.success(self.request, 'Category added successfully.')
         return redirect('blog:categories')
 
 
