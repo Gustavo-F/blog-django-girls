@@ -205,14 +205,18 @@ class ManageCategories(LoginRequiredMixin, View):
 
 @login_required
 def remove_category(request, pk):
-    category = models.Category.objects.get(pk=pk)
+    if not request.user.is_staff:
+        raise Http404()
+
+    category = get_object_or_404(models.Category, pk=pk)
 
     try:
         category.delete()
+        messages.success(request, 'Category removed successfully.')
     except:
         messages.error(
             request,
-            f'Not is possible remove the category "{category.name}", as there are posts registered using it.',
+            f'Not is possible remove the category {category.name}, as there are posts registered using it.',
         )
 
     return redirect('blog:categories')

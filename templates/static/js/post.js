@@ -4,3 +4,10 @@ function openEditModal(categoryId, categoryName) {
 
     $('#editCategoryModal').modal();
 }
+
+function openRemoveModal(categoryId, categoryName) {
+    document.getElementById('confirmRemoveButton').setAttribute('href', `/categories/remove/${categoryId}`);
+    document.getElementById('removeText').innerText = `You really want to remove the ${categoryName} category.`;
+
+    $('#removeCategoryModal').modal();
+}
