@@ -1,31 +1,30 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
     {% include 'partial/_head.html' %}
-    <title>Document</title>
+    <title>Register</title>
 </head>
 
 <body>
-    <div class="bg-secondary row justify-content-center align-items-center m-0" style="width: 100vw; height: 100vh;">
-        <div class="col-xl-4 col-lg-6 col-lg-8 m-0 p-1">
-            <div class="card card-body shadow p-5">
-                <h3 class="text-center mb-3">Sign Up</h3>
-                <form action="" method="post" autocomplete="off">
-                    {% csrf_token %}
-
-                    {{ register_form | crispy }}
-
-                    <div class="row">
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary">Register</button>
-                        </div>
+    <div class="row justify-content-center align-items-center m-0" style="width: 100vw; height: 100vh;">
+        <div class="col-xl-4 col-lg-4 col-lg-6 m-0 p-1">
+            <div class="card shadow pl-3 pr-3 border-0">
+                <div class="card-header bg-white text-center border-0">
+                    <h3>Register</h3>
+                </div>
+                <div class="card-body">
+                    {% include 'partial/_messages.html' %}
+                    {% crispy register_form %}
+                </div>
+                <div class="card-footer bg-white border-0 text-center">
+                    <div>
+                        <p>Already have an account? <a href="{%url 'account:login'%}">Login</a></p>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

@@ -40,7 +40,7 @@ class Register(View):
         super().setup(*args, **kwargs)
 
         context = {
-            'register_form': forms.SignUpForm(data=self.request.POST or None),
+            'register_form': forms.RegisterForm(data=self.request.POST or None),
         }
 
         self.register_form = context['register_form']

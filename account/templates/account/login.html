@@ -5,41 +5,48 @@
 
 <head>
     {% include 'partial/_head.html' %}
-    <title>Document</title>
+    <title>Login</title>
 </head>
 
 <body>
     <div class="row justify-content-center align-items-center m-0" style="width: 100vw; height: 100vh;">
-        <div class="col-xl-4 col-lg-6 col-lg-8 m-0 p-1">
-            <div class="card card-body shadow p-5">
-                <h3 class="text-center mb-3">Login</h3>
-                {% include 'partial/_messages.html' %}
-                <form action="" method="post" autocomplete="off">
-                    {% csrf_token %}
-
-                    <div class="form-group mb-3">
-                        <label for="username">Username</label>
-                        <input 
-                            class="form-control" id="username" type="text" placeholder="Username" 
-                            name="username" required autofocus 
-                        />
-                    </div>
-                    <div class="form-group mb-3">
-                        <label for="password">Password</label>
-                        <input class="form-control" id="password" type="password" placeholder="Password"
-                            name="password" required />
-                    </div>
-                    <div class="row">
-                        <div class="col-auto">
-                            <div class="form-group mb-3">
-                                <button class="btn btn-primary" type="submit">Login</button>
+        <div class="col-xl-4 col-lg-4 col-lg-6 m-0 p-1">
+            <div class="card shadow pl-3 pr-3 border-0">
+                <div class="card-header bg-white text-center border-0">
+                    <h3>Login</h3>
+                </div>
+                <div class="card-body">
+                    {% include 'partial/_messages.html' %}
+                    <form method="post" autocomplete="off">
+                        {% csrf_token %}
+    
+                        <div class="form-group mb-3">
+                            <input 
+                                class="form-control" id="username" type="text" placeholder="Username" 
+                                name="username" required autofocus 
+                            />
+                        </div>
+                        <div class="form-group mb-4">
+                            <input 
+                                class="form-control" id="password" type="password" placeholder="Password"
+                                name="password" required
+                            />
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group mb-3">
+                                    <button class="btn btn-primary w-100" type="submit">Login</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <a class="btn btn-primary" href="{% url 'account:register' %}" type="button">Register</a>
-                        </div>
+                    </form>
+                </div>
+                <div class="card-footer bg-white border-0 text-center">
+                    <div>
+                        <p><a href="">Forgot your password?</a></p>
+                        <p>Don't have an account? <a href="{%url 'account:register'%}">Register</a></p>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

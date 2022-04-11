@@ -3,27 +3,39 @@ from crispy_forms.layout import ButtonHolder, Column, Row, Submit
 from django import forms
 from django.contrib.auth.models import User
 
+from django.core.validators import EmailValidator
+from django.contrib.auth.password_validation import validate_password
 
-class SignUpForm(forms.ModelForm):
+
+class RegisterForm(forms.ModelForm):
     username = forms.CharField(
+        label='',
         required=True,
         max_length=30,
+        widget=forms.TextInput(attrs={'placeholder': 'Username'})
     )
 
     email = forms.EmailField(
+        label='',
         required=True,
+        validators=[EmailValidator],
+        widget=forms.EmailInput(attrs={'placeholder': 'Email'})
     )
 
     password = forms.CharField(
+        label='',
         required=True,
         max_length=30,
-        widget=forms.PasswordInput()
+        validators=[validate_password],
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password'})
     )
 
     confirm_password = forms.CharField(
+        label='',
         required=True,
         max_length=30,
-        widget=forms.PasswordInput()
+        validators=[validate_password],
+        widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'})
     )
 
     class Meta:
@@ -42,14 +54,15 @@ class SignUpForm(forms.ModelForm):
         raise forms.ValidationError(validation_msgs)
 
     def __init__(self, *args, **kwargs):
-        super(SignUpForm, self).__init__(*args, **kwargs)
+        super(RegisterForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
-            Row(Column('username')),
-            Row(Column('email')),
-            Row(Column('password')),
-            Row(Column('confirm_password')),
+            Row(Column('username', css_class='mb-3')),
+            Row(Column('email', css_class='mb-3')),
+            Row(Column('password', css_class='mb-3')),
+            Row(Column('confirm_password', css_class='mb-4')),
+            ButtonHolder(Submit('submit', 'Register', css_class='w-100')),
         )
         

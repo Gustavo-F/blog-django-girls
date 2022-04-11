@@ -1,36 +1,30 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
     <head>
         {% include 'partial/_head.html' %}
         <title>Blog</title>
     </head>
-    <body class="d-flex flex-column min-vh-100">
-        <div>
-            <!-- Nav -->
-            <section>
-                <header class="navigation">
-                    {% include 'partial/_nav.html' %}
-                </header>
-            </section>
-            <!-- Content -->
-            <section>
-                <main>
-                    <div class="container">
-                        {% include 'partial/_messages.html' %}
-                    </div>
+    <body class="d-flex flex-column h-100">
+        <!-- Nav -->
+        <header class="navigation">
+            {% include 'partial/_nav.html' %}
+        </header>
 
-                    {% block content %}{% endblock content %}
-                </main>
-            </section>
-            <!-- Footer -->
-            <section>
-                <footer class="mt-auto">
-                    {% include 'partial/_footer.html' %}
-                </footer>
-            </section>
-        </div>
+        <!-- Content -->
+        <main role="main" class="flex-shrink-0">
+            <div class="container">
+                {% include 'partial/_messages.html' %}
+            </div>
+
+            {% block content %}{% endblock content %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="mt-auto">
+            {% include 'partial/_footer.html' %}
+        </footer>
 
         <!-- jQuery -->
         <script src="{% static 'plugins/jQuery/jquery.min.js'%}"></script>
