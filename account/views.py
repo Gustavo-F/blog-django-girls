@@ -1,7 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.views import PasswordResetView
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views.generic import View
 
 from . import forms
@@ -69,3 +71,15 @@ class Register(View):
         login(self.request, user)
 
         return redirect('blog:index')
+
+
+class ForgotPassword(PasswordResetView):
+    template_name = 'account/forgot.html'
+    email_template_name = 'account/reset_password_email.html'
+    subject_template_name = 'account/reset_password_subject.txt '
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    
+    success_url = reverse_lazy('account:login')
