@@ -1,7 +1,9 @@
+from django import views
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import View
@@ -73,7 +75,7 @@ class Register(View):
         return redirect('blog:index')
 
 
-class ForgotPassword(PasswordResetView):
+class ForgotPassword(SuccessMessageMixin, PasswordResetView):
     template_name = 'account/forgot.html'
     email_template_name = 'account/reset_password_email.html'
     subject_template_name = 'account/reset_password_subject.txt '

@@ -135,7 +135,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_URL = 'blog:login'
+LOGIN_URL = 'account:login'
 
 MESSAGE_TAGS = {
     constants.DEBUG: 'alert-info',

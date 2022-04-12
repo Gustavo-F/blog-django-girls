@@ -7,22 +7,22 @@
     <div class="container">
         <div class="row masonry-container">
             {% for post in posts %}
-            <div class="col-lg-4 col-sm-6 mb-5">
-                <article class="text-center">
-                    {% if post.thumbnail %}
-                        <img class="img-fluid mb-4" src="{{ post.thumbnail.url }}" alt="post-thumb">
-                    {% endif %}
-                    <p class="text-uppercase mb-2">
-                        by {{ post.author }} | {{ post.published_date | naturalday }}
-                    </p>
-                    <p>{{ post.categories.all | post_categories }}</p>
-                    <h4 class="title-border">
-                        <a class="text-dark" href="{% url 'blog:post_details' post.slug %}">{{ post.title }}</a>
-                    </h4>
-                    <p>{{ post.text | slice:"0:196" }} ...</p>
-                    <a href="{% url 'blog:post_details' post.slug %}" class="btn btn-transparent">read more</a>
-                </article>
-            </div>
+                <div class="col-lg-4 col-sm-6 mb-5">
+                    <article class="text-center">
+                        {% if post.thumbnail %}
+                            <img class="img-fluid mb-4" src="{{ post.thumbnail.url }}" alt="post-thumb">
+                        {% endif %}
+                        <p class="text-uppercase mb-2">
+                            by {{ post.author }} | {{ post.published_date | naturalday }}
+                        </p>
+                        <p>{{ post.categories.all | post_categories }}</p>
+                        <h4 class="title-border">
+                            <a class="text-dark" href="{% url 'blog:post_details' post.slug %}">{{ post.title }}</a>
+                        </h4>
+                        <p>{{ post.text|slice:"0:196" }} ...</p>
+                        <a href="{% url 'blog:post_details' post.slug %}" class="btn btn-transparent">read more</a>
+                    </article>
+                </div>
             {% endfor %}
         </div>
     </div>

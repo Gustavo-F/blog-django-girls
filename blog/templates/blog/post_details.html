@@ -4,49 +4,76 @@
 {% load static %}
 
 {% block content %}
+    <!-- page-title -->
+    <section class="section bg-secondary">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4>{{ post.title }}</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /page-title -->
 
-<!-- page-title -->
-<section class="section bg-secondary">
     <div class="container">
+
+        <!-- Text -->
         <div class="row">
-            <div class="col-lg-12">
-                <h4>{{ post.title }}</h4>
+            <div class="col-lg-11">
+                <ul class="list-inline d-flex justify-content-between py-3">
+                    <li class="list-inline-item"><i class="ti-user mr-2"></i>Post by {{ post.author }}</li>
+                    <li class="list-inline-item"><i class="ti-calendar mr-2"></i>{{ post.published_date | naturalday }}</li>
+                </ul>
+
+                {% if post.thumbnail %}
+                    <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="w-100 img-fluid mb-4">
+                {% endif %}
+
+                <div class="content">
+                    {{ post.text | safe }}
+                </div>
             </div>
         </div>
-    </div>
-</section>
-<!-- /page-title -->
 
-<div class="container">
+        <!-- Like -->
+        <div class="d-block mt-5">
+            <h5 class="text-end">Did you like this post?</h5>
 
-    <!-- Text -->
-    <div class="row">
-        <div class="col-lg-11">
-            <ul class="list-inline d-flex justify-content-between py-3">
-                <li class="list-inline-item"><i class="ti-user mr-2"></i>Post by {{ post.author }}</li>
-                <li class="list-inline-item"><i class="ti-calendar mr-2"></i>{{ post.published_date | naturalday }}</li>
-            </ul>
+            {% if user_approval %}
 
-            {% if post.thumbnail %}
-            <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="w-100 img-fluid mb-4">
-            {% endif %}
-
-            <div class="content">
-                {{ post.text | safe }}
-            </div>
-        </div>
-    </div>
-
-    <!-- Like -->
-    <div class="d-block mt-5">
-        <h5 class="text-end">Did you like this post?</h5>
-
-        {% if user_approval %}
-
-            {% if user_approval.is_approved %}
+                {% if user_approval.is_approved %}
+                    <div class="row">
+                        <div class="col-1">
+                            <a class="btn btn-secondary" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
+                                <i class="ti-thumb-up">Like</i>
+                            </a>
+                        </div>
+                        <div class="col-1">
+                            <a class="btn" type="button" href="{% url 'blog:dislike_post' pk=post.pk like_bool=False %}">
+                                <i class="ti-thumb-down">Dislike</i>
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="row">
+                        <div class="col-1">
+                            <a class="btn" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
+                                <i class="ti-thumb-up">Like</i>
+                            </a>
+                        </div>
+                        <div class="col-1">
+                            <a class="btn  btn-secondary"type="button" href="{% url 'blog:dislike_post' pk=post.pk like_bool=False %}">
+                                <i class="ti-thumb-down">Dislike</i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            
+            {% else %}
                 <div class="row">
                     <div class="col-1">
-                        <a class="btn btn-secondary" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
+                        <a class="btn" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
                             <i class="ti-thumb-up">Like</i>
                         </a>
                     </div>
@@ -56,91 +83,58 @@
                         </a>
                     </div>
                 </div>
-            {% else %}
+            {% endif %}
+
+            {% if positive_approvals or negative_approvals %}
                 <div class="row">
                     <div class="col-1">
-                        <a class="btn" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
-                            <i class="ti-thumb-up">Like</i>
-                        </a>
+                        <span class="align-items-center">{{ positive_approvals }}%</span>
                     </div>
                     <div class="col-1">
-                        <a class="btn  btn-secondary"type="button" href="{% url 'blog:dislike_post' pk=post.pk like_bool=False %}">
-                            <i class="ti-thumb-down">Dislike</i>
-                        </a>
+                        <span class="align-items-center">{{ negative_approvals }}%</span>
                     </div>
                 </div>
             {% endif %}
-        
+        </div>
+
+        <!-- Comments -->
+        <hr />
+        {% if not request.user.is_authenticated %}
+            <p>Want to comment? <a href="{% url 'account:login' %}">Login</a></p>
         {% else %}
-            <div class="row">
-                <div class="col-1">
-                    <a class="btn" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
-                        <i class="ti-thumb-up">Like</i>
-                    </a>
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ comment_form | crispy }}
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Send</button>
                 </div>
-                <div class="col-1">
-                    <a class="btn" type="button" href="{% url 'blog:dislike_post' pk=post.pk like_bool=False %}">
-                        <i class="ti-thumb-down">Dislike</i>
-                    </a>
-                </div>
-            </div>
+            </form>
         {% endif %}
 
-        {% if positive_approvals or negative_approvals %}
-            <div class="row">
-                <div class="col-1">
-                    <span class="align-items-center">{{ positive_approvals }}%</span>
+        <hr />
+        <h3>Comments</h3>
+
+        {% for comment in comments %}
+            <div class="card mt-3">
+                <div class="card-header d-flex justify-content-between">
+                    <span class="align-items-center">
+                        <i class="ti-user"> {{ comment.author.username }} </i>
+                    </span>
+                    <span class="align-items-center">
+                        <i class="ti-calendar"> {{ comment.comment_date | naturalday }} </i>
+
+                        {% if request.user.is_staff %}
+                            <a href="{% url 'blog:remove_comment' comment.pk %}" class="btn" style="color: red;">
+                                <i class="ti-trash"></i>
+                            </a>
+                        {% endif %}
+                    </span>
                 </div>
-                <div class="col-1">
-                    <span class="align-items-center">{{ negative_approvals }}%</span>
+                <div class="card-body">
+                    {{ comment }}
                 </div>
             </div>
-        {% endif %}
+        {% endfor %}
     </div>
-
-    <hr />
-
-    <!-- Comments -->
-    {% if not request.user.is_authenticated %}
-    <a class="btn btn-primary" type="button" href="{% url 'blog:login' %}">Login to make a comment!</a>
-
-    {% else %}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ comment_form | crispy }}
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Send</button>
-        </div>
-    </form>
-    {% endif %}
-
-    <hr />
-
-    <h3>Comments</h3>
-
-    {% for comment in comments %}
-    <div class="card mt-3">
-        <div class="card-header d-flex justify-content-between">
-            <span class="align-items-center">
-                <i class="ti-user"> {{ comment.author.username }} </i>
-            </span>
-            <span class="align-items-center">
-                <i class="ti-calendar"> {{ comment.comment_date | naturalday }} </i>
-
-                {% if request.user.is_staff %}
-                    <a href="{% url 'blog:remove_comment' comment.pk %}" class="btn" style="color: red;">
-                        <i class="ti-trash"></i>
-                    </a>
-                {% endif %}
-            </span>
-        </div>
-        <div class="card-body">
-            {{ comment }}
-        </div>
-    </div>
-    {% endfor %}
-
-</div>
-
 {% endblock content %}
