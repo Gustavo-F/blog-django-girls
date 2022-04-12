@@ -1,6 +1,6 @@
-django
-pillow
-mysqlclient
-django-summernote
-django-crispy-forms
-django-multiselectfield
+Django==4.0.3
+Pillow==9.0.1
+mysqlclient==2.1.0
+django-summernote==0.8.20.0
+django-crispy-forms==1.14.0
+django-multiselectfield==0.1.12

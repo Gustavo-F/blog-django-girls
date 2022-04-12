@@ -145,6 +145,12 @@ MESSAGE_TAGS = {
     constants.WARNING: 'alert-warning',
 }
 
+SUMMERNOTE_CONFIG = {
+    'summernote': {
+        'width': '100%'
+    }
+}
+
 try:
     from .local_settings import *
 except:

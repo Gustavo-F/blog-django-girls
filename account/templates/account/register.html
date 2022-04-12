@@ -7,13 +7,19 @@
 <head>
     {% include 'partial/_head.html' %}
     <title>Register</title>
+
+    <style>
+        .asteriskField{
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
     <div class="row justify-content-center align-items-center m-0" style="width: 100vw; height: 100vh;">
         <div class="col-xl-4 col-lg-4 col-lg-6 m-0 p-1">
             <div class="card shadow pl-3 pr-3 border-0">
-                <div class="card-header bg-white text-center border-0">
+                <div class="card-header bg-white text-center border-0 mt-3">
                     <h3>Register</h3>
                 </div>
                 <div class="card-body">
@@ -48,6 +54,14 @@
 
     <!-- Main Script -->
     <script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+        const labelElements = document.getElementsByTagName('label');
+        
+        for (let index = 0; index < labelElements.length; index++) {
+            labelElements[index].setAttribute('class', 'small mb-1')
+        }
+    </script>
 </body>
 
 </html>
