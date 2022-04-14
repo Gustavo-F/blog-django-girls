@@ -1,20 +1,21 @@
-from django import views
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import View
 
-from . import forms
+from . import forms, models
 
 
 class Login(View):
     template_name = 'account/login.html'
 
     def get(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect('blog:index')
+
         return render(self.request, self.template_name)
 
     def post(self, *args, **kwargs):
@@ -62,7 +63,7 @@ class Register(View):
         if not self.register_form.is_valid():
             return self.render_template
 
-        user = User(
+        user = models.User(
             username=self.register_form.cleaned_data.get('username'),
             email=self.register_form.cleaned_data.get('email'),
         )
@@ -70,9 +71,12 @@ class Register(View):
         user.set_password(self.register_form.cleaned_data.get('password'))
         user.save()
 
-        login(self.request, user)
+        messages.success(
+            self.request,
+            'Account created successfully. You may log in below with the credentials you provided.',
+        )
 
-        return redirect('blog:index')
+        return redirect('account:login')
 
 
 class ForgotPassword(SuccessMessageMixin, PasswordResetView):

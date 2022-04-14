@@ -37,6 +37,7 @@ class ListPerCategory(ListView):
 
 
 class PostDetails(View):
+    # TODO: Corrigir exibição de porcentagem de likes e dislikes
     template_name = 'blog/post_details.html'
 
     def setup(self, *args, **kwargs):

@@ -1,10 +1,10 @@
 from crispy_forms.helper import FormHelper, Layout
 from crispy_forms.layout import ButtonHolder, Column, Row, Submit
 from django import forms
-from django.contrib.auth.models import User
-
-from django.core.validators import EmailValidator
 from django.contrib.auth.password_validation import validate_password
+from django.core.validators import EmailValidator
+
+from . import models
 
 
 class RegisterForm(forms.ModelForm):
@@ -39,7 +39,7 @@ class RegisterForm(forms.ModelForm):
     )
 
     class Meta:
-        model = User
+        model = models.User
         fields = ['username', 'email', 'password', 'confirm_password', ]
 
     def clean(self):
