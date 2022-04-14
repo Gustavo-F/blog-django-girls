@@ -5,10 +5,10 @@
 
 {% block content %}
     <!-- page-title -->
-    <section class="section bg-secondary">
+    <section class="section bg-secondary py-5">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-12 text-center">
                     <h4>{{ post.title }}</h4>
                 </div>
             </div>
@@ -17,17 +17,25 @@
     <!-- /page-title -->
 
     <div class="container">
-
         <!-- Text -->
         <div class="row">
-            <div class="col-lg-11">
+            <div class="col-lg-12">
                 <ul class="list-inline d-flex justify-content-between py-3">
-                    <li class="list-inline-item"><i class="ti-user mr-2"></i>Post by {{ post.author }}</li>
-                    <li class="list-inline-item"><i class="ti-calendar mr-2"></i>{{ post.published_date | naturalday }}</li>
+                    <li class="list-inline-item"><i class="fa-solid fa-user mr-2"></i>Post by {{ post.author }}</li>
+                    <li class="list-inline-item"><i class="fa-solid fa-calendar mr-2"></i>{{ post.published_date | naturalday }}</li>
                 </ul>
 
                 {% if post.thumbnail %}
-                    <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="w-100 img-fluid mb-4">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                            <img 
+                                src="{{ post.thumbnail.url }}" 
+                                alt="{{ post.title }}" 
+                                class="w-auto img-fluid mb-4"
+                                style="max-height: 400px;"
+                            >
+                        </div>
+                    </div>
                 {% endif %}
 
                 <div class="content">
@@ -36,65 +44,33 @@
             </div>
         </div>
 
-        <!-- Like -->
-        <div class="d-block mt-5">
-            <h5 class="text-end">Did you like this post?</h5>
-
-            {% if user_approval %}
-
-                {% if user_approval.is_approved %}
-                    <div class="row">
-                        <div class="col-1">
-                            <a class="btn btn-secondary" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
-                                <i class="ti-thumb-up">Like</i>
-                            </a>
-                        </div>
-                        <div class="col-1">
-                            <a class="btn" type="button" href="{% url 'blog:dislike_post' pk=post.pk like_bool=False %}">
-                                <i class="ti-thumb-down">Dislike</i>
-                            </a>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="row">
-                        <div class="col-1">
-                            <a class="btn" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
-                                <i class="ti-thumb-up">Like</i>
-                            </a>
-                        </div>
-                        <div class="col-1">
-                            <a class="btn  btn-secondary"type="button" href="{% url 'blog:dislike_post' pk=post.pk like_bool=False %}">
-                                <i class="ti-thumb-down">Dislike</i>
-                            </a>
-                        </div>
-                    </div>
-                {% endif %}
-            
-            {% else %}
-                <div class="row">
-                    <div class="col-1">
-                        <a class="btn" type="button" href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
-                            <i class="ti-thumb-up">Like</i>
-                        </a>
-                    </div>
-                    <div class="col-1">
-                        <a class="btn" type="button" href="{% url 'blog:dislike_post' pk=post.pk like_bool=False %}">
-                            <i class="ti-thumb-down">Dislike</i>
-                        </a>
-                    </div>
+        <!-- Likes & Dislikes -->
+        <div class="row mt-5 col-lg-12">
+            <div class="row col-lg-12">
+                <h5>Did you like this post?</h5>
+            </div>
+            <div class="row col-lg-12" style="gap: 16px;">
+                <div class="justify-content-between text-center">
+                    <a href="{% url 'blog:like_post' pk=post.pk like_bool=True %}">
+                        <i class="fa-solid fa-thumbs-up fa-2x
+                            {% if user_approval and user_approval.is_approved %} text-primary {% else %} text-secondary {% endif %}"
+                        ></i>
+                    </a>
+                    {% if positive_approvals %}
+                        <span class="ml-2">{{ positive_approvals }}</span>
+                    {% endif %}
                 </div>
-            {% endif %}
-
-            {% if positive_approvals or negative_approvals %}
-                <div class="row">
-                    <div class="col-1">
-                        <span class="align-items-center">{{ positive_approvals }}%</span>
-                    </div>
-                    <div class="col-1">
-                        <span class="align-items-center">{{ negative_approvals }}%</span>
-                    </div>
+                <div class="justify-content-between text-center">
+                    <a href="{% url 'blog:dislike_post' pk=post.pk like_bool=False %}">
+                        <i class="fa-solid fa-thumbs-down fa-2x
+                            {% if user_approval and not user_approval.is_approved %} text-primary {% else %} text-secondary {% endif %}"
+                        ></i>
+                    </a>
+                    {% if negative_approvals %}
+                        <span class="ml-2">{{ negative_approvals }}</span>
+                    {% endif %}
                 </div>
-            {% endif %}
+            </div>
         </div>
 
         <!-- Comments -->
@@ -118,16 +94,21 @@
         {% for comment in comments %}
             <div class="card mt-3">
                 <div class="card-header d-flex justify-content-between">
+                    <div class="align-items-center">
+                        <i class="fa-solid fa-user mr-1"></i>
+                        <span>{{ comment.author.username }}</span>
+                    </div>
                     <span class="align-items-center">
-                        <i class="ti-user"> {{ comment.author.username }} </i>
-                    </span>
-                    <span class="align-items-center">
-                        <i class="ti-calendar"> {{ comment.comment_date | naturalday }} </i>
+                        <i class="fa-solid fa-calendar mr-1"></i>
+                        <span>{{ comment.comment_date | naturalday }}</span>
 
                         {% if request.user.is_staff %}
-                            <a href="{% url 'blog:remove_comment' comment.pk %}" class="btn" style="color: red;">
-                                <i class="ti-trash"></i>
-                            </a>
+                            <button 
+                                class="btn-sm btn-danger ml-2" type="button"
+                                onclick="openRemoveCommentModal({{ comment.id }}, '{{ comment.author.username }}')"
+                            >
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
                         {% endif %}
                     </span>
                 </div>
@@ -137,4 +118,33 @@
             </div>
         {% endfor %}
     </div>
+
+    <!-- Remove Comment Modal -->
+    <div id="removeCommentModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Remove Comment</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div id="removeText" class="col-lg-12">
+                            Confirm remove?
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a id="confirmRemoveButton" class="btn btn-primary" href="">Yes</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'js/post.js' %}"></script>
+{% endblock scripts %}

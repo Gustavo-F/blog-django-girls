@@ -37,32 +37,25 @@ class ListPerCategory(ListView):
 
 
 class PostDetails(View):
-    # TODO: Corrigir exibição de porcentagem de likes e dislikes
     template_name = 'blog/post_details.html'
 
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
 
-        self.post_object = get_object_or_404(
-            models.Post, slug=self.kwargs.get('slug'))
-
+        self.post_object = get_object_or_404(models.Post, slug=self.kwargs.get('slug'))
         comments = models.Comment.objects.filter(post=self.post_object)
-
-        user_approval = None
-        positive_approvals = None
-        negative_approvals = None
-
-        if self.request.user.is_authenticated:
-            user_approval = models.Aproval.objects.filter(
-                user=self.request.user, post=self.post_object).first()
-
         approvals = models.Aproval.objects.filter(post=self.post_object)
 
+        user_approval = None
+        positive_approvals = 0
+        negative_approvals = 0
+
         if approvals:
-            positive_approvals = (
-                len(approvals.filter(is_approved=True)) / len(approvals)) * 100
-            negative_approvals = (
-                len(approvals.filter(is_approved=False)) / len(approvals)) * 100
+            if self.request.user.is_authenticated:
+                user_approval = approvals.filter(user=self.request.user).first()
+            
+            positive_approvals = approvals.filter(is_approved=True).count()
+            negative_approvals = approvals.filter(is_approved=False).count()
 
         context = {
             'post': self.post_object,
@@ -74,9 +67,7 @@ class PostDetails(View):
         }
 
         self.comment_form = context['comment_form']
-
-        self.render_template = render(
-            self.request, self.template_name, context)
+        self.render_template = render(self.request, self.template_name, context)
 
     def get(self, *args, **kwargs):
         return self.render_template
@@ -92,7 +83,6 @@ class PostDetails(View):
         )
 
         comment.save()
-
         return redirect('blog:post_details', slug=self.post_object.slug)
 
 

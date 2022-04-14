@@ -1,9 +1,7 @@
-from django.utils.text import slugify
-from django.db import models
-from django.db.models.deletion import CASCADE, DO_NOTHING
 from django.conf import settings
-from django.db.models.fields import BLANK_CHOICE_DASH
+from django.db import models
 from django.utils import timezone
+from django.utils.text import slugify
 
 
 class Category(models.Model):
@@ -17,7 +15,7 @@ class Post(models.Model):
     title = models.CharField(max_length=255)
     text = models.TextField()
     thumbnail = models.ImageField(upload_to='posts_img/%Y/%m/%d', blank=True, null=True)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     categories = models.ManyToManyField(Category)
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
@@ -39,8 +37,8 @@ class Post(models.Model):
 
 class Comment(models.Model):
     comment = models.CharField(max_length=255)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
-    post = models.ForeignKey(Post, on_delete=CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     comment_date = models.DateTimeField(default=timezone.now)
     is_approved = models.BooleanField(default=True)
 
@@ -50,8 +48,8 @@ class Comment(models.Model):
 
 class Aproval(models.Model):
     is_approved = models.BooleanField(blank=True, null=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
-    post = models.ForeignKey(Post, on_delete=CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (('user', 'post'),)

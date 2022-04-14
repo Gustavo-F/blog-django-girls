@@ -4,3 +4,4 @@ mysqlclient==2.1.0
 django-summernote==0.8.20.0
 django-crispy-forms==1.14.0
 django-multiselectfield==0.1.12
+fontawesomefree==6.1.1
