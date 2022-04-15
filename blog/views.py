@@ -97,13 +97,11 @@ class WritePost(LoginRequiredMixin, View):
         }
 
         self.post_form = context['write_post_form']
-
-        self.render_template = render(
-            self.request, self.template_name, context)
+        self.render_template = render(self.request, self.template_name, context)
 
     def get(self, *args, **kwargs):
         if not self.request.user.is_staff:
-            return redirect('blog:index')
+            raise Http404()
 
         return self.render_template
 
@@ -113,7 +111,9 @@ class WritePost(LoginRequiredMixin, View):
 
         post = self.post_form.save(commit=False)
         post.author = self.request.user
+        post.save()
 
+        post.categories.set(self.post_form.cleaned_data.get('categories'))
         post.save()
 
         messages.success(self.request, 'Post created successfully.')
@@ -217,7 +217,7 @@ def get_categories(request):
     return {'categories': models.Category.objects.all()}
 
 
-@login_required(login_url='/accounts/login/')
+@login_required
 def edit_category(request, pk):
     if not request.user.is_staff:
         raise Http404()
@@ -237,7 +237,10 @@ def edit_category(request, pk):
 
 @login_required
 def remove_comment(request, pk):
-    comment = models.Comment.objects.get(pk=pk)
-    comment.delete()
+    comment = get_object_or_404(models.Comment, pk=pk)
+    
+    if request.user.is_staff or request.user == comment.author:
+        comment.delete()
+        messages.success(request, 'Comment removed successfully.')
 
     return redirect(request.META.get('HTTP_REFERER'))

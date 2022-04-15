@@ -24,7 +24,7 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         super().save()
-        self.slug = f'{slugify(self.title)}-' + str(self.id)
+        self.slug = f'{slugify(self.title)}-{str(self.id)}'
 
         if not self.published_date and self.is_published:
             self.published_date = timezone.now()

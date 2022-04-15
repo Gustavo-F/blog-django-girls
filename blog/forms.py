@@ -12,6 +12,7 @@ class WritePostForm(forms.ModelForm):
         required=True,
         min_length=15,
         max_length=255,
+        widget=forms.TextInput(attrs={'placeholder': 'Title'}),
     )
 
     thumbnail = forms.ImageField(
@@ -31,15 +32,19 @@ class WritePostForm(forms.ModelForm):
     )
 
     text = forms.CharField(
+        label='Text',
         required=True,
         widget=SummernoteWidget()
     )
 
-    publish_now = forms.BooleanField()
+    is_published = forms.BooleanField(
+        required=False,
+        label='Publish Now'
+    )
 
     class Meta:
         model = models.Post
-        fields = ['categories', 'thumbnail', 'title', 'text', 'publish_now']
+        fields = ['categories', 'thumbnail', 'is_published', 'title', 'text']
 
 
 class CommentForm(forms.ModelForm):
