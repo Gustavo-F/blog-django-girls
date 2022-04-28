@@ -17,7 +17,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-from . import settings
+from .settings import base
 
 urlpatterns = [
     path('', include('blog.urls', 'blog')),
@@ -25,4 +25,4 @@ urlpatterns = [
 
     path('admin/', admin.site.urls),
     path('summernote/', include('django_summernote.urls')),  
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(base.MEDIA_URL, document_root=base.MEDIA_ROOT)
