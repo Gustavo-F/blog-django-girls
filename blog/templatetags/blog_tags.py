@@ -1,3 +1,4 @@
+import os
 from unicodedata import category
 from django import template
 
@@ -18,3 +19,8 @@ def post_categories(categories):
                 result += (category.name)
 
         return result
+
+
+@register.filter
+def filename(file):
+    return os.path.basename(file.name)
